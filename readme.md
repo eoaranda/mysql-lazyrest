@@ -218,4 +218,4 @@ List of routes that will be created **automagically** per table:
 
 [licence]: https://img.shields.io/npm/l/mta-metro.svg?maxAge=2592000
 [made-nyc]: https://img.shields.io/badge/Made-NYC-blue.svg
-[git-lazyrest]: https://github.com/eoaranda/mysql-lazyrest
+[git-mysql-lazyrest]: https://github.com/eoaranda/mysql-lazyrest
