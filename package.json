@@ -1,11 +1,28 @@
 {
-  "name": "lazyrest",
+  "name": "mysql-lazyrest",
   "version": "1.0.0",
-  "description": "",
-  "main": "src/index.js",
-  "scripts": {
-    "start": "nodemon src/index.js localhost 8080"
+  "description": "LazyREST creates automagically the ALL the REST routes for a specified MySQL database",
+  "main": "index.js",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/eoaranda/mysql-lazyrest.git"
   },
+  "scripts": {
+    "start": "nodemon index.js localhost 8080"
+  },
+  "engines": {
+    "node": ">=8.x"
+  },
+  "keywords": [
+    "Mysql",
+    "node rest",
+    "express rest service",
+    "mysql rest",
+    "mysql lazy rest",
+    "mysql-lazyrest"
+  ],
+  "author": "Edgar Aranda <aranda.dev@gmail.com>",
+  "license": "MIT",
   "dependencies": {
     "body-parser": "1.18.3",
     "express": "4.16.3",
@@ -14,5 +31,12 @@
   "devDependencies": {
     "nodemon": "1.18.4"
   },
-  "keywords": []
+  "bugs": {
+    "url": "https://github.com/eoaranda/mysql-lazyrest/issues"
+  },
+  "homepage": "https://github.com/eoaranda/mysql-lazyrest#readme",
+  "directories": {
+    "example": "examples",
+    "test": "test"
+  }
 }

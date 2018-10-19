@@ -1,7 +1,7 @@
 // Ex1 - Stand alone
 
 // we call the library
-const lr = require('lazyrest');
+const lr = require('mysql-lazyrest');
 
 // we create a new lazyRest and we send the conneciton string data
 let rest = new lr.lazyRest({

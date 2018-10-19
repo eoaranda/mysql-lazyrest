@@ -1,22 +1,22 @@
-# lazyREST 🛌
+# mysql-lazyRest 🛌
 LazyREST lets you automagically create REST routes for all the tables and views of a specified schema of your **MySQL** db, by only configuring the database connection string.
 
 **Disclaimer:**
 I recommend this library only for development environments.
 
-[![Licence][licence]][git-lazyrest] [![Made NYC][made-nyc]][git-lazyrest]
+[![Licence][licence]][git-mysql-lazyrest] [![Made NYC][made-nyc]][git-mysql-lazyrest]
 
 ## Installation
 
 This is a Node.js module available through the npm registry.
 
 ```sh
-npm install lazyrest --save
+npm install mysql-lazyrest --save
 ```
 
 
 ### Quick Start
-After installing **lazyrest** you can follow the next example an have a REST service running in 1-2-3.
+After installing **mysql-lazyrest** you can follow the next example an have a REST service running in 1-2-3.
 
 The MySQL connection string adepts to the connection string used by ***mysql.createConnection(config);***
 
@@ -26,7 +26,7 @@ You can read more about this in the [Mysql](https://www.npmjs.com/package/mysql)
 
 ```javascript
 // 1 - require the library
-const lr = require('lazyrest');
+const lr = require('mysql-lazyrest');
 
 // 2 - create a new lazyrest object and configure the database connection string
 let rest = new lr.lazyRest({
@@ -42,12 +42,12 @@ rest.run();
 ```
 
 ## Examples:
-You can see below some other examples of how to implement lazyREST.
+You can see below some other examples of how to implement mysql-lazyrest.
 
 #### Ex 1 -  Standalone 
 ```javascript
 // we call the library
-const lr = require('lazyrest');
+const lr = require('mysql-lazyrest');
 
 // we create a new lazyRest and we send the conneciton string data
 let rest = new lr.lazyRest({
@@ -64,7 +64,7 @@ rest.run();
 #### Ex 2 -  Standalone w/ configurations
 ```javascript
 // we call the library
-const lr = require('lazyrest');
+const lr = require('mysql-lazyrest');
 
 // we create a new lazyRest and we send the conneciton string data
 let rest = new lr.lazyRest({
@@ -92,7 +92,7 @@ const express = require("express");
 const app = express();
 const port = 8080;
 // we call the library
-const lr = require('lazyrest');
+const lr = require('mysql-lazyrest');
 
 // we create a new lazyRest and we send the conneciton string data
 let rest = new lr.lazyRest({
@@ -218,4 +218,4 @@ List of routes that will be created **automagically** per table:
 
 [licence]: https://img.shields.io/npm/l/mta-metro.svg?maxAge=2592000
 [made-nyc]: https://img.shields.io/badge/Made-NYC-blue.svg
-[git-lazyrest]: https://github.com/eoaranda/lazyrest
+[git-lazyrest]: https://github.com/eoaranda/mysql-lazyrest
