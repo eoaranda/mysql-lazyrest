@@ -208,7 +208,7 @@ List of routes that will be created **automagically** per table:
 | GET | <table_name>/<id_number> | 200 | Returns a specific row from the requested table based on the id number of the primary key of the table |
 | PATCH | <table_name>/<id_number> | 201 | Updates data based on the id of the primary key of the table |
 | DELETE | <table_name>/<id_number> | 200 | Deletes a specific row from the requested table based on the id number of the primary key of the table |
-| CREATE | <table_name>/ | 201 | Inserts data to the requested table |
+| POST | <table_name>/ | 201 | Inserts data to the requested table |
 
 ## License
 
