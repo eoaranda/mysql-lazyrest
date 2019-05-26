@@ -162,8 +162,8 @@ rest.models([
 	table_name: "table_name", 
 	// set the name route for this table
 	alias: "table",  
-	// set the access level for this route, available: READ,CREATE,UPDATE,DELETE,ALL or 
-	access: [ empty for ALL
+	// set the access level for this route, available: READ,CREATE,UPDATE,DELETE,ALL or empty for ALL
+	access: [ 
 		lr.READ,
 		lr.CREATE
 	] 
