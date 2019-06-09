@@ -195,6 +195,8 @@ class Crud {
   }
 }
 
+}
+
 class Database {
   constructor(connectionString) {
     if (
@@ -207,22 +209,27 @@ class Database {
         "Database Error: Your are missing required parameters in the connection String."
       );
 
-    this.connection = mysql.createConnection(connectionString);
+    connectionString.connectionLimit = 100;
+    this.connection = mysql.createPool(connectionString);
   }
 
   query(sql, args) {
     return new Promise((resolve, reject) => {
-      this.connection.query(sql, args, (err, rows) => {
-        if (err) return reject(err);
-        resolve(rows);
+      this.connection.getConnection(function (err, poolConnection) {
+        poolConnection.query(sql, args, (err, rows) => {
+          if (err) return reject(err);
+          poolConnection.release();
+          resolve(rows);
+        });
       });
     });
   }
 
   close() {
     return new Promise((resolve, reject) => {
-      this.connection.end(err => {
+      this.connection.getConnection(function (err, poolConnection) {
         if (err) return reject(err);
+        poolConnection.release();
         resolve();
       });
     });
