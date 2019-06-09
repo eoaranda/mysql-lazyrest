@@ -195,8 +195,6 @@ class Crud {
   }
 }
 
-}
-
 class Database {
   constructor(connectionString) {
     if (
