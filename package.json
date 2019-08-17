@@ -1,6 +1,6 @@
 {
   "name": "mysql-lazyrest",
-  "version": "1.0.1",
+  "version": "2.0.0",
   "description": "LazyREST creates automagically the ALL the REST routes for a specified MySQL database",
   "main": "index.js",
   "repository": {

@@ -76,7 +76,7 @@ let rest = new lr.lazyRest({
 });
 
 // hide tables to be populated
-rest.hide(["A_OLD_lkp_municipio", "A_OLD_lkp_oxxogas"]);
+rest.hide(["A_OLD_lkp_city", "A_OLD_lkp_states"]);
 
 // set models for specific tables, this sets the alias, the access of a table
 rest.models([{ table_name: "t_city", alias: "city", access: [lr.READ] }]);
@@ -198,17 +198,31 @@ List of routes that will be created **automagically** per table:
 
 
 | Method | Url | HTTP Status | Result |
-|--------|----------------------------------------------------------------------|-------------|-------------------------------------------------------------------------------------------------------------------|
+|--------|-----|-------------|--------|
 | GET | tables/ | 200 | Returns a table object with information of the available tables. |
-| GET | <table_name>/describe | 200 | Returns the db description of the requested table per column |
-| GET | <table_name>/ | 200 | Returns all the data of the requested table |
-| GET | <table_name>/order/<column_ name>/by/<asc_or_desc> | 200 | Returns all the data of the requested table ordered by a requested column and in asc or desc order |
-| GET | <table_name>/limit/<number> | 200 | Returns the first <n> number of rows of the request table |
-| GET | <table_name>/order/<column_  name>/by/<asc_or_desc>/limit/<  number> | 200 | Returns  the first <n> number of rows of a requested table ordered by a requested column and in asc or desc order |
-| GET | <table_name>/<id_number> | 200 | Returns a specific row from the requested table based on the id number of the primary key of the table |
-| PATCH | <table_name>/<id_number> | 201 | Updates data based on the id of the primary key of the table |
-| DELETE | <table_name>/<id_number> | 200 | Deletes a specific row from the requested table based on the id number of the primary key of the table |
-| POST | <table_name>/ | 201 | Inserts data to the requested table |
+| GET | `<table_name>`/describe | 200 | Returns the db description of the requested table per column |
+| GET | `<table_name>`/ | 200 | Returns all the data of the requested table |
+| GET | `<table_name>`/order/`<column_name>`/`<asc_or_desc>` | 200 | Returns all the data of the requested table ordered by a requested column and in asc or desc order |
+| GET | `<table_name>`/limit/`<number>` | 200 | Returns the first <n> number of rows of the request table |
+| GET | `<table_name>`/order/`<column_name>`/`<asc_or_desc>`/limit/`<number>` | 200 | Returns  the first <n> number of rows of a requested table ordered by a requested column and in asc or desc order |
+| GET | `<table_name>`/search/`<column>`/`<value>` | 200 | Returns a specific row from the requested table based on the searched column key and value |
+| GET | `<table_name>`/`<prim_key_column>`/`<prim_key_value>` | 200 | Returns a specific row from the requested table based on the primary key and its value. (Faster that search) |
+| GET | `<table_name>`/status | 200 | Returns the timestamp if table is alive or returns last time the table was updated, this last ONLY works in MyISAM tables  |
+| PATCH | `<table_name>`/`<prim_key_column>`/`<prim_key_value>` | 201 | Updates data in the requested table based on the primary key and its value|
+| DELETE | `<table_name>`/`<prim_key_column>`/`<prim_key_value>` | 200 | Deletes a specific row from the requested table based on the primary key and its value |
+| POST | `<table_name>`/ | 201 | Inserts data to the requested table |
+
+
+## Error codes
+
+List of possible error codes.
+
+| HTTP Code | Meaning |
+|-----------|---------|
+| 400 | Bad request - There was an error at the time of the query |
+| 404 | Not found - The requested route does not exist. |
+| 500 | Internal Server Error - Something went really wrong in the query or the route |
+
 
 ## License
 

@@ -1,35 +1,35 @@
-"use strict";
-let mysqlLazyRest = require("./mlr");
+'use strict';
+const mysqlLazyRest = require('./mlr')
 
-function lazyRest(
-  connectionString = { host: "", user: "", password: "", database: "" }
+function lazyRest (
+  connectionString = { host: '', user: '', password: '', database: '' }
 ) {
   this.globalVariables = {
     hidenTables: [],
     connectionString: connectionString,
     modelsTables: []
-  };
+  }
 }
 
 /*
 This are the public methods
 */
-lazyRest.prototype.run = function(
-  config = { port: "", app: "", prefix: "", lifetime: "" }
+lazyRest.prototype.run = function (
+  config = { port: '', app: '', prefix: '', lifetime: '' }
 ) {
   try {
-    new mysqlLazyRest.mlr(config, this.globalVariables);
+    new mysqlLazyRest.mlr(config, this.globalVariables)
   } catch (e) {
-    console.log(e.message);
+    console.log(e.message)
   }
+}
+
+lazyRest.prototype.hide = function (hidenTables) {
+  this.globalVariables.hidenTables = hidenTables
 };
 
-lazyRest.prototype.hide = function(hidenTables) {
-  this.globalVariables.hidenTables = hidenTables;
-};
-
-lazyRest.prototype.models = function(modelsTables) {
-  this.globalVariables.modelsTables = modelsTables;
+lazyRest.prototype.models = function (modelsTables) {
+  this.globalVariables.modelsTables = modelsTables
 };
 
 module.exports = {
@@ -39,4 +39,4 @@ module.exports = {
   UPDATE: mysqlLazyRest.UPDATE,
   DELETE: mysqlLazyRest.DELETE,
   ALL: mysqlLazyRest.ALL
-};
+}
