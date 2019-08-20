@@ -1,21 +1,27 @@
 'use strict';
 const mysql = require('mysql')
+const CRUDERROR = 'CrudError';
 
 class Crud {
-  constructor (globalVariables) {
-    if (globalVariables === undefined)
-      {throw new Error("Global variables are not defined.");}
+  constructor(globalVariables) {
+    if (globalVariables === undefined) { throw self.CrudError("Global variables are not defined."); }
 
     try {
       this.globalVariables = globalVariables
       this.db = new Database(globalVariables.connectionString)
       this.schema = this.globalVariables.connectionString.database
     } catch (e) {
-      console.log('Crud Error: ' + e.message)
+      console.log(CRUDERROR + ' ' + e.message)
     }
   }
 
-  ConvertValue (value) {
+  CrudError(errorMessage) {
+    let e = new Error(errorMessage);
+    e.name = CRUDERROR;
+    return e;
+  }
+
+  ConvertValue(value) {
     let key
     if (isNaN(value)) {
       key = "'" + value + "'"
@@ -25,12 +31,12 @@ class Crud {
     return key
   }
 
-  ConvertColumn (column) {
+  ConvertColumn(column) {
     return '\`' + column + '\`';
   }
 
   // CREATE record in database
-  Create (table, req) {
+  Create(table, req) {
     const self = this
     let sql = '';
     const data = req.body
@@ -42,18 +48,9 @@ class Crud {
     }
 
     if (data != null) {
-      sql =
-        'INSERT INTO ' +
-        table.table_schema +
-        '.' +
-        table.table_name +
-        ' ( ' +
-        columns.join() +
-        ' ) VALUES (' +
-        columnVal.join() +
-        ' ) ';
+      sql = 'INSERT INTO ' + table.table_schema + '.' + table.table_name + ' ( ' + columns.join() + ' ) VALUES (' + columnVal.join() + ' ) ';
     } else {
-      throw new Error('Crud Error: Could create insert statement.')
+      throw self.CrudError('Could not create insert statement.')
     }
     return new Promise(function (resolve, reject) {
       self.db.query(sql)
@@ -61,32 +58,13 @@ class Crud {
           resolve(results)
         })
         .catch(function (err) {
-          reject('Crud Error: Unable to insert data: ' + err.message)
-        })
-    })
-  }
-
-  // SEARCH from the database using column and key
-  Search (table, params = null) {
-    const self = this
-
-    return new Promise(function (resolve, reject) {
-      if (params == null) {
-        throw new Error('Crud Error: Missing paramenters')
-      }
-
-      self.Read(table, params).then(function (data) {
-        resolve(data)
-        })
-        .catch(function (e) {
-          res.status(500).send(GENERIC_ERROR_MSG)
-          reject(GENERIC_ERROR_MSG)
+          reject(new Error(err.message))
         })
     })
   }
 
   // READBYKEY  from the database using ONLY the primary keys
-  ReadByKey (table, params = null) {
+  ReadByKey(table, params = null) {
     const self = this
 
     return new Promise(function (resolve, reject) {
@@ -94,23 +72,22 @@ class Crud {
         var keysArr = table.primary_key.split(',')
         if (keysArr !== undefined || keysArr.length > 0) {
           if (keysArr.indexOf(params.key) < 0) {
-            throw new Error('Crud Error: Incorrect primary key.')
+            throw self.CrudError('Incorrect primary key.');
           }
         }
       }
 
       self.Read(table, params).then(function (data) {
         resolve(data)
-        })
-        .catch(function (e) {
-          res.status(500).send(GENERIC_ERROR_MSG)
-          reject(GENERIC_ERROR_MSG)
+      })
+        .catch(function (err) {
+          reject(new Error(err.message))
         })
     })
   }
 
   // READ from the database 1 by 1 or Multiple
-  Read (table, params = null) {
+  Read(table, params = null) {
     let extra = '';
     const self = this
     if (params != null) {
@@ -118,27 +95,26 @@ class Crud {
         extra = ' WHERE ' + self.ConvertColumn(params.key) + ' =  ' + self.ConvertValue(params.id) + ' ';
       }
       if (params.column !== undefined && params.order !== undefined) {
-        extra = extra + ' ORDER BY ' + self.ConvertColumn(params.column) + ' ' + self.ConvertValue(params.order)
+        extra = extra + ' ORDER BY ' + self.ConvertColumn(params.column) + ' ' + params.order
       }
       if (params.limit !== undefined) {
         extra = extra + ' LIMIT ' + self.ConvertValue(params.limit)
       }
     }
     const sql = 'SELECT * FROM ' + table.table_schema + '.' + table.table_name + ' ' + extra
-
     return new Promise(function (resolve, reject) {
       self.db.query(sql)
         .then(results => {
           resolve(results)
         })
         .catch(function (err) {
-          reject('Crud Error: Unable to read data: ' + err.message)
+          reject(new Error(err.message))
         })
     })
   }
 
   // UPDATE from the database
-  Update (table, req) {
+  Update(table, req) {
     const self = this
     let sql = '';
     const data = req.data.body
@@ -148,7 +124,7 @@ class Crud {
       var keysArr = table.primary_key.split(',')
       if (keysArr !== undefined || keysArr.length > 0) {
         if (keysArr.indexOf(req.key) < 0) {
-          throw new Error('Crud Error: Incorrect primary key.')
+          throw self.CrudError('Incorrect primary key.')
         }
       }
     }
@@ -170,7 +146,7 @@ class Crud {
         ' = ' +
         self.ConvertValue(req.id)
     } else {
-      throw new Error('Crud Error: Could not create update statement.')
+      throw self.CrudError('Could not create update statement.')
     }
 
     return new Promise(function (resolve, reject) {
@@ -179,13 +155,13 @@ class Crud {
           resolve(results)
         })
         .catch(function (err) {
-          reject('Crud Error: Unable to update data: ' + err.message)
+          reject(new Error(err.message))
         })
     })
   }
 
   // DELETE from the database only 1 by 1
-  Delete (table, req) {
+  Delete(table, req) {
     const self = this
     let sql = '';
 
@@ -193,23 +169,15 @@ class Crud {
       var keysArr = table.primary_key.split(',')
       if (keysArr !== undefined || keysArr.length > 0) {
         if (keysArr.indexOf(req.key) < 0) {
-          throw new Error('Crud Error: Incorrect primary key.')
+          throw self.CrudError('Incorrect primary key.')
         }
       }
     }
 
     if (req.id != null || req.key != null) {
-      sql =
-        'DELETE FROM ' +
-        table.table_schema +
-        '.' +
-        table.table_name +
-        ' WHERE ' +
-        self.ConvertColumn(req.key) +
-        ' = ' +
-        self.ConvertValue(req.id)
+      sql = 'DELETE FROM ' + table.table_schema + '.' + table.table_name + ' WHERE ' + self.ConvertColumn(req.key) + ' = ' + self.ConvertValue(req.id)
     } else {
-      throw new Error('Crud Error: Could not create the delete statement.')
+      throw self.CrudError('Could not create the delete statement.')
     }
 
     return new Promise(function (resolve, reject) {
@@ -218,13 +186,13 @@ class Crud {
           resolve(results)
         })
         .catch(function (err) {
-          reject('Crud Error: Unable to delete data: ' + err.message)
+          reject(new Error(err.message))
         })
     })
   }
 
   // DESCRIBE the table
-  Describe (table) {
+  Describe(table) {
     const self = this
     let sql = 'DESCRIBE ' + table.table_schema + '.' + table.table_name
 
@@ -234,22 +202,20 @@ class Crud {
           resolve(results)
         })
         .catch(function (err) {
-          reject('Crud Error: Unable to parse data: ' + err.message)
+          reject(new Error(err.message))
         })
     })
   }
 
   // get detailed information of the tables in that schema
-  SchemaTables () {
+  SchemaTables() {
     const self = this
     let schema = this.schema
     let hidenTables = this.globalVariables.hidenTables
 
     let schemaSql = schema ? "WHERE t.TABLE_SCHEMA = '" + schema + "' " : '';
 
-    const hidenSql = hidenTables.length
-      ? "AND t.TABLE_NAME NOT IN ('" + hidenTables.join("','") + "')"
-      : '';
+    const hidenSql = hidenTables.length ? "AND t.TABLE_NAME NOT IN ('" + hidenTables.join("','") + "')" : '';
 
     const sql =
       'SELECT t.TABLE_NAME, t.TABLE_TYPE, t.TABLE_SCHEMA, GROUP_CONCAT(c.COLUMN_NAME) AS PRIMARY_KEYS FROM information_schema.tables t ' +
@@ -264,13 +230,13 @@ class Crud {
           resolve(results)
         })
         .catch(function (err) {
-          reject('Crud Error: Unable to parse data: ' + err.message)
+          reject(new Error(err.message))
         })
     })
   }
 
   // returns the last time the table in question was updated, only works for MyISAM tables
-  UpdateTime (table) {
+  UpdateTime(table) {
     const self = this
     let sql = "SELECT UPDATE_TIME FROM information_schema.tables WHERE TABLE_SCHEMA = '" + table.table_schema + "' AND TABLE_NAME = '" + table.table_name + "' "
 
@@ -280,13 +246,13 @@ class Crud {
           resolve(results)
         })
         .catch(function (err) {
-          reject('Crud Error: Unable to parse data: ' + err.message)
+          reject(new Error(err.message))
         })
     })
   }
 
   // Returns the time stamp if the table is available
-  HeartBeat (table) {
+  HeartBeat(table) {
     const self = this
     let sql = 'Select 1 from ' + table.table_schema + '.' + table.table_name + ' limit 1';
     return new Promise(function (resolve, reject) {
@@ -295,29 +261,29 @@ class Crud {
           resolve(results)
         })
         .catch(function (err) {
-          reject('Crud Error: Unable to parse data: ' + err.message)
+          reject(new Error(err.message))
         })
     })
   }
 }
 
 class Database {
-  constructor (connectionString) {
+  constructor(connectionString) {
     if (
       connectionString.host === undefined ||
       connectionString.user === undefined ||
       connectionString.password === undefined ||
       connectionString.database === undefined
-    )
-      {throw new Error(
-        "Database Error: Your are missing required parameters in the connection String."
-      );}
+    ) {
+      throw new Error("Your are missing required parameters in the connection String."
+      );
+    }
 
     connectionString.connectionLimit = 100
     this.connection = mysql.createPool(connectionString)
   }
 
-  query (sql, args) {
+  query(sql, args) {
     return new Promise((resolve, reject) => {
       this.connection.getConnection(function (err, poolConnection) {
         poolConnection.query(sql, args, (err, rows) => {
@@ -329,7 +295,7 @@ class Database {
     })
   }
 
-  close () {
+  close() {
     return new Promise((resolve, reject) => {
       this.connection.getConnection(function (err, poolConnection) {
         if (err) return reject(err)
