@@ -200,18 +200,22 @@ List of routes that will be created **automagically** per table:
 | Method | Url | HTTP Status | Result |
 |--------|-----|-------------|--------|
 | GET | tables/ | 200 | Returns a table object with information of the available tables. |
+| GET | routes/ | 200 | Returns a JSON with all the routes created |
+| GET | verbose/`<true_or_false>` | 200 | If set to true it will display the detail of the error. |
 | GET | `<table_name>`/describe | 200 | Returns the db description of the requested table per column |
 | GET | `<table_name>`/ | 200 | Returns all the data of the requested table |
 | GET | `<table_name>`/order/`<column_name>`/`<asc_or_desc>` | 200 | Returns all the data of the requested table ordered by a requested column and in asc or desc order |
 | GET | `<table_name>`/limit/`<number>` | 200 | Returns the first <n> number of rows of the request table |
 | GET | `<table_name>`/order/`<column_name>`/`<asc_or_desc>`/limit/`<number>` | 200 | Returns  the first <n> number of rows of a requested table ordered by a requested column and in asc or desc order |
-| GET | `<table_name>`/search/`<column>`/`<value>` | 200 | Returns a specific row from the requested table based on the searched column key and value |
 | GET | `<table_name>`/`<prim_key_column>`/`<prim_key_value>` | 200 | Returns a specific row from the requested table based on the primary key and its value. (Faster that search) |
+| GET | `<table_name>`/search/`<column>`/`<value>` | 200 | Returns the rows from the requested table based on the searched column key and value |
+| GET | `<table_name>`/search/`<column>`/`<value>`/order/`<column_name>`/`<asc_or_desc>` | 200 | Returns the rows from the requested table based on the searched column key and value ordered by a requested column and in asc or desc order |
+| GET | `<table_name>`/search/`<column>`/`<value>`/limit/`<number>` | 200 | Returns the rows from the requested table based on the searched column key and value,limited by the first <n> number of rows |
+| GET | `<table_name>`/search/`<column>`/`<value>`/order/`<column_name>`/`<asc_or_desc>`/limit/`<number>` | 200 | Returns the rows from the requested table based on the searched column key and value ordered by a requested column and in asc or desc order, limited by the first <n> number of rows |
 | GET | `<table_name>`/status | 200 | Returns the timestamp if table is alive or returns last time the table was updated, this last ONLY works in MyISAM tables  |
 | PATCH | `<table_name>`/`<prim_key_column>`/`<prim_key_value>` | 201 | Updates data in the requested table based on the primary key and its value|
-| DELETE | `<table_name>`/`<prim_key_column>`/`<prim_key_value>` | 200 | Deletes a specific row from the requested table based on the primary key and its value |
 | POST | `<table_name>`/ | 201 | Inserts data to the requested table |
-
+| DELETE | `<table_name>`/`<prim_key_column>`/`<prim_key_value>` | 200 | Deletes a specific row from the requested table based on the primary key and its value |
 
 ## Error codes
 
@@ -219,10 +223,9 @@ List of possible error codes.
 
 | HTTP Code | Meaning |
 |-----------|---------|
-| 400 | Bad request - There was an error at the time of the query |
+| 400 | Bad request - There was an error at the time of building the query string. |
 | 404 | Not found - The requested route does not exist. |
-| 500 | Internal Server Error - Something went really wrong in the query or the route |
-
+| 502 | Bad Gateway - Could not resolve the query or the route due to bad input. |
 
 ## License
 
