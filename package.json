@@ -1,18 +1,57 @@
 {
-  "name": "mysql-lazyrest",
-  "version": "2.0.0",
-  "description": "LazyREST creates automagically the ALL the REST routes for a specified MySQL database",
-  "main": "index.js",
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/eoaranda/mysql-lazyrest.git"
+  "_args": [
+    [
+      "mysql-lazyrest@2.0.0",
+      "C:\\Users\\earanda\\nodejs\\test1"
+    ]
+  ],
+  "_from": "mysql-lazyrest@2.0.0",
+  "_id": "mysql-lazyrest@2.0.0",
+  "_inBundle": false,
+  "_integrity": "sha512-KZgFMXDLSbxND+bYYoHX9ZqHyiZYLwdjY382evqUFBVn4O5mCicvkEMxcxvCx2OonOrqwpON9AcxuS53NAPtCw==",
+  "_location": "/mysql-lazyrest",
+  "_phantomChildren": {},
+  "_requested": {
+    "type": "version",
+    "registry": true,
+    "raw": "mysql-lazyrest@2.0.0",
+    "name": "mysql-lazyrest",
+    "escapedName": "mysql-lazyrest",
+    "rawSpec": "2.0.0",
+    "saveSpec": null,
+    "fetchSpec": "2.0.0"
   },
-  "scripts": {
-    "start": "nodemon index.js localhost 8080"
+  "_requiredBy": [
+    "/"
+  ],
+  "_resolved": "https://registry.npmjs.org/mysql-lazyrest/-/mysql-lazyrest-2.0.0.tgz",
+  "_spec": "2.0.0",
+  "_where": "C:\\Users\\earanda\\nodejs\\test1",
+  "author": {
+    "name": "Edgar Aranda",
+    "email": "aranda.dev@gmail.com"
+  },
+  "bugs": {
+    "url": "https://github.com/eoaranda/mysql-lazyrest/issues"
+  },
+  "dependencies": {
+    "body-parser": "1.18.3",
+    "event-stream": ">=4.0.0",
+    "express": "4.16.3",
+    "mysql": "2.16.0"
+  },
+  "description": "LazyREST creates automagically the ALL the REST routes for a specified MySQL database",
+  "devDependencies": {
+    "nodemon": "1.18.4"
+  },
+  "directories": {
+    "example": "examples",
+    "test": "test"
   },
   "engines": {
     "node": ">=8.x"
   },
+  "homepage": "https://github.com/eoaranda/mysql-lazyrest#readme",
   "keywords": [
     "Mysql",
     "node rest",
@@ -21,23 +60,15 @@
     "mysql lazy rest",
     "mysql-lazyrest"
   ],
-  "author": "Edgar Aranda <aranda.dev@gmail.com>",
   "license": "MIT",
-  "dependencies": {
-    "body-parser": "1.18.3",
-    "express": "4.16.3",
-    "mysql": "2.16.0",
-    "event-stream": ">=4.0.0"
+  "main": "index.js",
+  "name": "mysql-lazyrest",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/eoaranda/mysql-lazyrest.git"
   },
-  "devDependencies": {
-    "nodemon": "1.18.4"
+  "scripts": {
+    "start": "nodemon index.js localhost 8080"
   },
-  "bugs": {
-    "url": "https://github.com/eoaranda/mysql-lazyrest/issues"
-  },
-  "homepage": "https://github.com/eoaranda/mysql-lazyrest#readme",
-  "directories": {
-    "example": "examples",
-    "test": "test"
-  }
+  "version": "2.1.0"
 }
