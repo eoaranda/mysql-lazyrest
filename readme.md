@@ -5,6 +5,7 @@ LazyREST lets you automagically create REST routes for all the tables and views 
 I recommend this library only for development environments.
 
 [![Licence][licence]][git-mysql-lazyrest] [![Made NYC][made-nyc]][git-mysql-lazyrest]
+[![git-mysql-lazyrest-version][git-mysql-lazyrest-version]][git-mysql-lazyrest]
 
 ## Installation
 
@@ -198,7 +199,7 @@ List of routes that will be created **automagically** per table:
 
 
 | Method | Url | HTTP Status | Result |
-|--------|-----|-------------|--------|
+|--------|-----------|-------------|----------------------------------------------------------------------------------------|
 | GET | tables/ | 200 | Returns a table object with information of the available tables. |
 | GET | routes/ | 200 | Returns a JSON with all the routes created |
 | GET | verbose/`<true_or_false>` | 200 | If set to true it will display the detail of the error. |
@@ -236,3 +237,4 @@ List of possible error codes.
 [licence]: https://img.shields.io/npm/l/mta-metro.svg?maxAge=2592000
 [made-nyc]: https://img.shields.io/badge/Made-NYC-blue.svg
 [git-mysql-lazyrest]: https://github.com/eoaranda/mysql-lazyrest
+[git-mysql-lazyrest-version]: https://img.shields.io/github/package-json/v/eoaranda/mysql-lazyrest
