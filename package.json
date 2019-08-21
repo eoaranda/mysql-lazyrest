@@ -70,5 +70,5 @@
   "scripts": {
     "start": "nodemon index.js localhost 8080"
   },
-  "version": "2.1.0"
+  "version": "2.1.1"
 }
