@@ -177,7 +177,7 @@ This **configurations** are global and will affect the operation of all the rout
 
 **Ex.**
 ```javascript
-rest.run({ port: "", app: "", prefix: "/api/v1", lifetime: 0 });
+rest.run({ port: "", app: "", prefix: "/api/v1", lifetime: 0 , access: '*'});
 ```
 #### Options available:
 ```javascript
@@ -189,7 +189,9 @@ rest.run({ port: "", app: "", prefix: "/api/v1", lifetime: 0 });
 	// prefix for the routes ex. localhost:8080/api/v1/...
 	prefix: "",
 	// set the max-age of Cache-Control, the expected param is in hours and set by default to 24. If set to 0 then it will set no-cache, no-store, must-revalidate.
-	lifetime: 0  
+	lifetime: 0,
+	// set the Access-Control-Allow-Origin for CORS support , ex. * or a specific domain
+	access: ""
 }
 ```
 
