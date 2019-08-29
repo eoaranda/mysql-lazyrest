@@ -1,18 +1,18 @@
-'use strict';
+'use strict'
 const Crud = require('./crud')
-let express = require('express')
-let bodyParser = require('body-parser')
+const express = require('express')
+const bodyParser = require('body-parser')
 
-const CREATE = 'post';
-const READ = 'get';
-const UPDATE = 'patch';
-const DELETE = 'delete';
-const ALL = 'all';
+const CREATE = 'post'
+const READ = 'get'
+const UPDATE = 'patch'
+const DELETE = 'delete'
+const ALL = 'all'
 
 // RESPONSES
 const ERROR_MSG_QUERY = '400: Could not build query. ' // 400;
-const ERROR_MSG_SERVER = '502: Backend service failure.'; //502
-const ERROR_MSG_NOT_FOUND = '404: This is not the page you are looking for. (Route not found)'; // 404
+const ERROR_MSG_SERVER = '502: Backend service failure.' //502
+const ERROR_MSG_NOT_FOUND = '404: This is not the page you are looking for. (Route not found)' // 404
 
 const RESPONSE_CODE_ERROR = 400 // BAD REQUEST
 const RESPONSE_CODE_NOTFOUND_ERROR = 404 // NOT FOUND
@@ -21,9 +21,9 @@ const RESPONSE_CODE_SUCCESS = 200 // GET, DELETE
 const RESPONSE_CODE_ALTER_SUCCESS = 201 // POST, PATCH
 
 // the project code name is mlr
-function mlr(config, globalVariables) {
+function mlr (config, globalVariables) {
   const self = this
-  let crud = new Crud(globalVariables)
+  const crud = new Crud(globalVariables)
   this.modelsTables = globalVariables.modelsTables
 
   // if config is not defined set the rest to empty
@@ -32,7 +32,8 @@ function mlr(config, globalVariables) {
       port: '',
       app: '',
       prefix: '',
-      lifetime: ''
+      lifetime: '',
+      access: ''
     }
   }
 
@@ -40,18 +41,23 @@ function mlr(config, globalVariables) {
   this.app = typeof config.app === 'undefined' || config.app == '' ? express() : config.app
   this.prefix = typeof config.prefix === 'undefined' ? '' : config.prefix
   this.lifetime = typeof config.lifetime === 'undefined' ? '24' : config.lifetime
+  this.access = typeof config.access === 'undefined' ? false : config.access
   this.crud = crud
-  this.verbose = false;
+  this.verbose = false
 
   let maxage = this.lifetime * 60 * 60
   let cachetype = 'public, max-age=' + maxage
+  const accessControl = this.access ? this.access : false
 
   if (this.lifetime == 0) {
-    cachetype = 'no-cache, no-store, must-revalidate';
+    cachetype = 'no-cache, no-store, must-revalidate'
   }
 
   // send the header and cache data
   this.app.use(function (req, res, next) {
+    if (accessControl != false) {
+      res.setHeader('Access-Control-Allow-Origin', accessControl)
+    }
     res.setHeader('Cache-Control', cachetype)
     res.setHeader('X-Powered-By', 'lazyRest')
     next()
@@ -71,21 +77,21 @@ function mlr(config, globalVariables) {
       res.status(RESPONSE_CODE_SUCCESS).json(data)
     })
 
-    // GET ALL ROUTES 
+    // GET ALL ROUTES
     self.app.get(self.prefix + '/routes', (req, res, next) => {
-      let routeLinks = [];
-      self.app._router.stack.forEach(function(r){
-        if (r.route && r.route.path){
-          routeLinks.push(r.route.path);
+      const routeLinks = []
+      self.app._router.stack.forEach(function (r) {
+        if (r.route && r.route.path) {
+          routeLinks.push(r.route.path)
         }
       })
-      res.status(RESPONSE_CODE_SUCCESS).json({routeLinks});
+      res.status(RESPONSE_CODE_SUCCESS).json({ routeLinks })
     })
 
-    // SET Verbose 
+    // SET Verbose
     self.app.get(self.prefix + '/verbose/:status', (req, res, next) => {
-      let verboseStatus = req.params.status
-      self.verbose = (verboseStatus.toLowerCase() === 'true' || verboseStatus.toLowerCase() === '1') ? true : false;
+      const verboseStatus = req.params.status
+      self.verbose = !!((verboseStatus.toLowerCase() === 'true' || verboseStatus.toLowerCase() === '1'));
       res.status(RESPONSE_CODE_SUCCESS).send('Verbose set to: ' + self.verbose)
     })
 
@@ -127,36 +133,36 @@ mlr.prototype.getTables = function () {
       })
       .catch(err => reject('Error: Unable to load data: ' + err.message))
   })
-};
+}
 
 // returns the alias of that table
 mlr.prototype.getAlias = function (tableName) {
   if (typeof this.modelsTables === 'undefined') {
-    return '';
+    return ''
   }
 
   const data = this.modelsTables
-  let found = data.find(function (data) {
+  const found = data.find(function (data) {
     return data.table_name === tableName
   })
-  return (typeof found !== 'undefined' && typeof found.alias !== 'undefined') ? found.alias : '';
+  return (typeof found !== 'undefined' && typeof found.alias !== 'undefined') ? found.alias : ''
 }
 
 // returns the acces of the table, CREATE,READ,UPDATE,DELETE
 mlr.prototype.getAccess = function (tableName) {
   if (typeof this.modelsTables === 'undefined') {
-    return '';
+    return ''
   }
   const data = this.modelsTables
-  let found = data.find(function (data) {
+  const found = data.find(function (data) {
     return data.table_name === tableName
   })
-  return (typeof found !== 'undefined' && typeof found.access !== 'undefined' && found != 'all') ? found.access : '';
+  return (typeof found !== 'undefined' && typeof found.access !== 'undefined' && found != 'all') ? found.access : ''
 }
 
 // calidates that the type of route can be created depending on the table permissions
 mlr.prototype.validRoute = function (table, permission) {
-  const access = table.access !== '' ? table.access : 'all';
+  const access = table.access !== '' ? table.access : 'all'
 
   // we can only set read permissions to views
   if (table.type.toUpperCase() === 'VIEW' && permission === READ) {
@@ -171,14 +177,13 @@ mlr.prototype.validRoute = function (table, permission) {
   }
 
   return false
-};
+}
 
 // create the routes for all the tables
 mlr.prototype.createRoutes = function (table) {
   const self = this
-  let app = this.app
-  let name = table.alias !== '' ? table.alias : table.table_name
-
+  const app = this.app
+  const name = table.alias !== '' ? table.alias : table.table_name
 
   // Create / Insert route
   if (self.validRoute(table, CREATE)) {
@@ -189,7 +194,7 @@ mlr.prototype.createRoutes = function (table) {
           res.status(RESPONSE_CODE_ALTER_SUCCESS).json(data)
         })
         .catch(function (e) {
-          self.errorHandler(res, e);
+          self.errorHandler(res, e)
         })
     })
   }
@@ -204,19 +209,19 @@ mlr.prototype.createRoutes = function (table) {
           res.status(RESPONSE_CODE_SUCCESS).json(data)
         })
         .catch(function (e) {
-          self.errorHandler(res, e);
+          self.errorHandler(res, e)
         })
     })
 
     // Read ALL
-    app.get(self.prefix + '/' + name , (req, res, next) => {
+    app.get(self.prefix + '/' + name, (req, res, next) => {
       self.crud
         .Read(table)
         .then(function (data) {
           res.status(RESPONSE_CODE_SUCCESS).json(data)
         })
         .catch(function (e) {
-          self.errorHandler(res, e);
+          self.errorHandler(res, e)
         })
     })
 
@@ -232,7 +237,7 @@ mlr.prototype.createRoutes = function (table) {
           res.status(RESPONSE_CODE_SUCCESS).json(data)
         })
         .catch(function (e) {
-          self.errorHandler(res, e);
+          self.errorHandler(res, e)
         })
     })
 
@@ -247,7 +252,7 @@ mlr.prototype.createRoutes = function (table) {
           res.status(RESPONSE_CODE_SUCCESS).json(data)
         })
         .catch(function (e) {
-          self.errorHandler(res, e);
+          self.errorHandler(res, e)
         })
     })
 
@@ -264,7 +269,7 @@ mlr.prototype.createRoutes = function (table) {
           res.status(RESPONSE_CODE_SUCCESS).json(data)
         })
         .catch(function (e) {
-          self.errorHandler(res, e);
+          self.errorHandler(res, e)
         })
     })
 
@@ -280,7 +285,7 @@ mlr.prototype.createRoutes = function (table) {
           res.status(RESPONSE_CODE_SUCCESS).json(data)
         })
         .catch(function (e) {
-          self.errorHandler(res, e);
+          self.errorHandler(res, e)
         })
     })
 
@@ -296,17 +301,17 @@ mlr.prototype.createRoutes = function (table) {
           res.status(RESPONSE_CODE_SUCCESS).json(data)
         })
         .catch(function (e) {
-          self.errorHandler(res, e);
+          self.errorHandler(res, e)
         })
     })
 
-    // Search by any column and add order by 
+    // Search by any column and add order by
     app.get(self.prefix + '/' + name + '/search/:key/:id/order/:column/:order', (req, res, next) => {
       const params = {
         key: req.params.key,
         id: req.params.id,
         column: req.params.column,
-        order: req.params.order,
+        order: req.params.order
       }
       self.crud
         .Read(table, params)
@@ -314,7 +319,7 @@ mlr.prototype.createRoutes = function (table) {
           res.status(RESPONSE_CODE_SUCCESS).json(data)
         })
         .catch(function (e) {
-          self.errorHandler(res, e);
+          self.errorHandler(res, e)
         })
     })
 
@@ -333,7 +338,7 @@ mlr.prototype.createRoutes = function (table) {
           res.status(RESPONSE_CODE_SUCCESS).json(data)
         })
         .catch(function (e) {
-          self.errorHandler(res, e);
+          self.errorHandler(res, e)
         })
     })
 
@@ -350,7 +355,7 @@ mlr.prototype.createRoutes = function (table) {
           res.status(RESPONSE_CODE_SUCCESS).json(data)
         })
         .catch(function (e) {
-          self.errorHandler(res, e);
+          self.errorHandler(res, e)
         })
     })
 
@@ -368,14 +373,14 @@ mlr.prototype.createRoutes = function (table) {
                 })
               })
               .catch(function (e) {
-                self.errorHandler(res, e);
+                self.errorHandler(res, e)
               })
           } else {
             res.status(RESPONSE_CODE_SUCCESS).json(data)
           }
         })
         .catch(function (e) {
-          self.errorHandler(res, e);
+          self.errorHandler(res, e)
         })
     })
   }
@@ -395,7 +400,7 @@ mlr.prototype.createRoutes = function (table) {
           res.status(RESPONSE_CODE_ALTER_SUCCESS).json(data)
         })
         .catch(function (e) {
-          self.errorHandler(res, e);
+          self.errorHandler(res, e)
         })
     })
   }
@@ -413,21 +418,20 @@ mlr.prototype.createRoutes = function (table) {
           res.status(RESPONSE_CODE_SUCCESS).json(data)
         })
         .catch(function (e) {
-          self.errorHandler(res, e);
+          self.errorHandler(res, e)
         })
     })
   }
-
 } // end createRoutes fn
 
 // error handler fn for specific error msgs and codes
 mlr.prototype.errorHandler = function (res, error) {
   const self = this
-  let errMessageDetail = '';
+  let errMessageDetail = ''
 
   if (self.verbose) {
-    errMessageDetail = ' ' + error;
-    console.log(errMessageDetail);
+    errMessageDetail = ' ' + error
+    console.log(errMessageDetail)
   }
 
   if (error.name == 'CrudError') {

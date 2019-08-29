@@ -1,4 +1,4 @@
-'use strict';
+'use strict'
 const mysqlLazyRest = require('./mlr')
 
 function lazyRest (
@@ -15,7 +15,7 @@ function lazyRest (
 This are the public methods
 */
 lazyRest.prototype.run = function (
-  config = { port: '', app: '', prefix: '', lifetime: '' }
+  config = { port: '', app: '', prefix: '', lifetime: '', access: '' }
 ) {
   try {
     new mysqlLazyRest.mlr(config, this.globalVariables)
@@ -26,11 +26,11 @@ lazyRest.prototype.run = function (
 
 lazyRest.prototype.hide = function (hidenTables) {
   this.globalVariables.hidenTables = hidenTables
-};
+}
 
 lazyRest.prototype.models = function (modelsTables) {
   this.globalVariables.modelsTables = modelsTables
-};
+}
 
 module.exports = {
   lazyRest: lazyRest,
